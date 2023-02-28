@@ -1,0 +1,13 @@
+version : '3'
+
+services :
+  debian:
+    image: debian:latest
+    container_name: NGINX
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /Users/tliot/Inception/srcs/NGINX/nginx.conf:/etc/nginx/nginx.conf
+      - /Users/tliot/Inception/srcs/NGINX/ssl:/ssl/
