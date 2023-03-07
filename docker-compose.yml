@@ -1,10 +1,18 @@
 version : '3'
 
 services :
-  debian:
-    build: .
-    container_name: NGINX
+  nginx:
+    build: nginx
+    container_name: nginx
     ports:
-      - 80:80
-      - 443:443
-    #restart: always    
+      - 82:80
+      - 444:443
+    restart: always
+    
+  wordpress:
+    build: wordpress
+    container_name: wordpress
+    ports:
+      - 81:80
+      - 442:443
+    restart: always    
