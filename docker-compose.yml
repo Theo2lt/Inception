@@ -7,7 +7,7 @@ services :
     ports:
       - 82:80
       - 444:443
-    restart: always
+    #restart: always
     
   wordpress:
     build: wordpress
@@ -15,4 +15,4 @@ services :
     ports:
       - 81:80
       - 442:443
-    restart: always    
+    #restart: always    
