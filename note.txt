@@ -53,7 +53,7 @@ paramètre docker run : -v vol:/var/data/
 
 -----------------------
 
-1 : docker run -d --name c1 -v vol:/usr/share/nginx/html/ nginx:latest : lancement et montage du volume 
+1 : docker run -d --name c1 -v vol:/usr/share/nginx/html/ -p 80:80 nginx:latest : lancement et montage du volume 
 
 docker exec -ti c1 bash : pour se connecter dans un conteneur avec bash (ou pour lance un autre executable)
 
@@ -62,3 +62,31 @@ Creer un docker qui se detruit la fin de son utilisation:
 
 
 -----------------------
+
+### Les differents type de volumes ### 
+
+1. Bind Mount 
+2. Volumes Docker 
+3. TMPFS
+
+Distinction CLI
+. -v ou --volume 
+    si nom de volume = volume
+    si path = bind 
+
+. --mount + type
+    type = bind / volume / tmpfs 
+
+
+1. Bind Mount
+sudo mkdir /data
+docker run -d --name c1 --mount type=bind,source=/data/,target=/usr/share/nginx/html -p 80:80 nginx:latest
+Option : ,readonly / ,readwrite
+docker exec -ti c1 bash
+
+2. Volumes Docker
+docker volume create mynginx
+docker run -d --name c2 --mount type=volume,src=mynginx,destination=/usr/share/nginx/html -p 81:80 nginx:latest 
+
+3. Tmpfs
+docker run -d --name c3 --mount type=tmpfs,destination=/usr/share/nginx/html -p 82:80 nginx:latest 
