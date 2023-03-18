@@ -1,7 +1,5 @@
-FROM debian
-RUN apt-get update -y
-RUN apt-get upgrade -y
-RUN apt-get install nginx -y
-RUN mkdir /etc/nginx/ssl
-#EXPOSE 80 443
-CMD ["nginx", "-g", "daemon off;"]
+FROM debian:latest
+RUN apt-get update
+RUN apt-get install -y nginx 
+VOLUME /var/www/html
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

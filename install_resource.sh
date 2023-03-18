@@ -7,6 +7,6 @@ sudo apt-get install lsb-release -y
 
 sudo apt-get install docker.io -y
 sudo apt-get install docker -y
-sudo apt-get install docker-compose-plugin -y
+sudo apt-get install docker-compose -y
 sudo docker --version
 echo "FINISH"

@@ -220,3 +220,169 @@ Intérêts de dockerfile
     - meilleure visibilité sur la configuration
     - script edition de docker file 
     - création d'image de prod ou dev
+
+
+
+Dans le Dockerfile : 
+---
+FROM debian:latest
+RUN apt-get update \ 
+&& apt-get install -y vim git \
+&& apt-get clean \
+---
+
+Pour constuire l'image :
+. docker build -t imagetest:v1.0 .
+
+Pour verifier l'existance de l'image :
+. docker image ls
+
+Pour verifier les sequences appliqué a la création d'image : 
+. docker history imagetest:v1.0
+
+Pour lancer l'image : 
+. docker run -tid --name test imagetest:v1.0 
+
+Verifier que vim et git sont bien installé.
+
+(en ligne de commande dans la host, 
+on peux supprimer le conteneur avec "docker rm -f <name>"
+on peux supprimer l'image créer avec "docker rmi <name img>"
+. docker images
+. docker ps )
+
+-----------------------
+
+### Les microservices ###
+
+. Franctionner pour mieux maitriser l'environnement
+    - Réseau
+    - version de services
+
+. Franctionner pour adapter la ressources
+    - Plus de workers : produire plus 
+    - Plus de serveurs web : recevoir plus de trafic de manière indepedante
+
+. Augmenter la vitesse de deploiement
+. Réduire les single point of failure (SPOF)
+
+
+-- Exemple minimaliste ---
+
+. 1 page index.html à mettre à jour
+. 1 variables calculées (bash)
+
+. 2 conteneurs
+    - 1 serveur web nginx 
+    - 1 conteneur php (worker)
+
+- - - - - - - - - - - - - -
+Dockerfile nginx
+---
+FROM debian:latest
+RUN apt-get update
+RUN apt-get install -y nginx 
+VOLUME /var/www/html
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+---
+Dockerfile worker
+---
+FROM php:7.2-cli
+COPY rollon.sh /
+COPY affichage.php /
+RUN chmod 755 /rollon.sh
+ENTRYPOINT ["./rollon.sh"]
+---
+rollon.sh
+---
+#! /bin/bash
+x=0
+while true
+do
+echo $x > /var/www/html/worker1.txt
+((x=x+1))
+php /affichage.php
+sleep 2
+done
+---
+affichage.php
+---
+<?php
+$file1='/var/www/html/worker1.txt';
+$Data1="";
+
+# worker data
+if (file_exists($file1)) {
+$fh = fopen($file1,'r');
+while ($line = fgets($fh)) {
+  $worker1 = $line;
+}
+fclose($fh);
+}
+# affichage
+$File = "/var/www/html/index.html";
+$Handle = fopen($File, 'w');
+$Data1 = "worker 1 vaut ".$worker1."\n";
+fwrite($Handle, $Data1);
+
+fclose($Handle);
+?>
+---
+
+
+-----------------------
+
+### Inspection des Container ###
+
+docker inspect [OPTIONS] NAME|ID [NAME|ID...]
+
+Par default "docker inspect <name>" renvoi le resultat de l'inspection detaillé sous fornat json.
+
+On vas pourvoir apr exemple recupérer
+- docker status 
+- la taille du docker 
+- config Réseaux 
+- etc ...
+
+Par la suite on poura utiliser des commande plus specifique comme : 
+. docker inspect --format='{{.Config.Image}}' <Name | ID>
+
+
+La commande suivant permet par exemple d'énumérer les different container grace à leur ID, suivi de leur address IP.
+. for id in $(docker ps -aq); do docker inspect -f "{{.Name}} - - {{.NetworkSettings.IPAddress}}" $id;done 
+----------------------- 
+
+
+### Docker Network ###
+
+. docker network [connect/create/disconnect/inspect/ls/prune/rm]
+
+- Communication entre conteneurs ou à l'exterieur
+- Differents types : bridge, host, none, overlay
+- Attention un conteneur n'a pas d'ip fixe (stop / start)
+
+
+test : 
+
+. docker run --name c1 -d debian sleep infinity
+
+Dans le container : 
+. apt install iputils-ping net-tools
+. ifconfig
+ping l'ip de host à l'interieur du bridge : 
+. ping 127.0.0.1
+ping dns google : 
+. ping 8.8.8.8
+
+pour mieux comprendre le chemin de la requete nous pouvons utiliser :
+. traceroute 8.8.8.8
+
+---
+
+### Expose vs Publish ###
+
+Expose = exposer un port
+Publish = ports de publication
+
+Expose permet d'exposer le port du conteneur.
+Publish permet de faire une redirection de port du conteneur a la machine hote.
