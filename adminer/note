@@ -1,0 +1,1 @@
+docker run  -tid -p 80:80  --name cAdminer adminerv1

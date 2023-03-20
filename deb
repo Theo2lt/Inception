@@ -1,0 +1,4 @@
+CONTAINER ID   IMAGE          COMMAND                  CREATED       STATUS                       PORTS                               NAMES
+fdbc013479b3   adminerv1      "bash"                   5 hours ago   Exited (255) 4 minutes ago   0.0.0.0:80->80/tcp, :::80->80/tcp   cAdminer
+5c2787a3906f   sqlv1          "bash"                   5 hours ago   Exited (255) 4 minutes ago                                       maria
+0bb8775dd635   911e19fb0073   "/bin/sh -c 'install…"   5 hours ago   Exited (1) 5 hours ago                                           condescending_ellis
