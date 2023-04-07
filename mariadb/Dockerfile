@@ -15,6 +15,5 @@ COPY ./conf/script.sql /home/script.sql
 # DEMARE MARIADB ET APPLIQUE LES DROITS DE PRIVILEGES
 RUN service mariadb start && mariadb  < /home/script.sql && rm -f /home/script.sql;
 
-
 ENTRYPOINT ["mysqld"]
 

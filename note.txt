@@ -1,3 +1,6 @@
+
+/////////// les docker files ///////// 
+
 LANCEMENT DOCKER : 
          -d : mode detachable (background)
     -- name : definir le nom du DOCKER
@@ -351,18 +354,17 @@ Par la suite on poura utiliser des commande plus specifique comme :
 La commande suivant permet par exemple d'énumérer les different container grace à leur ID, suivi de leur address IP.
 . for id in $(docker ps -aq); do docker inspect -f "{{.Name}} - - {{.NetworkSettings.IPAddress}}" $id;done 
 ----------------------- 
+RESEAU 
+### Expose vs Publish ###
+
+Expose = exposer un port
+Publish = ports de publication
+
+Expose permet d'exposer le port du conteneur.
+Publish permet de faire une redirection de port du conteneur a la machine hote.
 
 
-### Docker Network ###
-
-. docker network [connect/create/disconnect/inspect/ls/prune/rm]
-
-- Communication entre conteneurs ou à l'exterieur
-- Differents types : bridge, host, none, overlay
-- Attention un conteneur n'a pas d'ip fixe (stop / start)
-
-
-test : 
+test 1: 
 
 . docker run --name c1 -d debian sleep infinity
 
@@ -377,12 +379,58 @@ ping dns google :
 pour mieux comprendre le chemin de la requete nous pouvons utiliser :
 . traceroute 8.8.8.8
 
+
+. attention un conteneur n'a pas d'ip fixe (stop/start)
+. utiliser les DNS ou api/socket docker 
+
+test 2: 
+start c1
+docker run -d --name c1 nginx:latest 
+
+docker inspect c1 --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+-> 172.17.0.2
+
+stop c1
+docker stop c1
+
+start c2
+docker run -d --name c2 nginx:latest 
+
+start c1
+docker start c1
+
+docker inspect c1 --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+-> 172.17.0.3
+
+On voie donc dans cette exemple que les ip(s) fournie par docker ne sont pas fixe.
+
+
+### Docker Network ###
+
+. docker network [connect/create/disconnect/inspect/ls/prune/rm]
+
+- Communication entre conteneurs ou à l'exterieur
+- Differents types : bridge, host, none, overlay
+- Attention un conteneur n'a pas d'ip fixe (stop / start)
+
+
+test : 
+docker network create --driver=bridge --subnet=192.166.0.0/24 netnet2
+docker run -d --name c1 --network netnet2 nginx:latest
+docker run -d --name c1 --network netnet2 nginx:latest
+
+docker exec -ti c1 bash
+-> apt update
+-> apt install iputils-ping
+-> ping c2
+---
+64 bytes from c2.netnet2 (192.166.0.4): icmp_seq=1 ttl=64 time=0.419 ms
+64 bytes from c2.netnet2 (192.166.0.4): icmp_seq=2 ttl=64 time=0.309 ms
+64 bytes from c2.netnet2 (192.166.0.4): icmp_seq=3 ttl=64 time=0.341 ms
 ---
 
-### Expose vs Publish ###
+On peut voir que l'on peux maintenant communiquer avec le name de la vm qui fait une redirection vers l'ip.
 
-Expose = exposer un port
-Publish = ports de publication
-
-Expose permet d'exposer le port du conteneur.
-Publish permet de faire une redirection de port du conteneur a la machine hote.
+On peut aussi aller regarder dans 
+.docker inspect netnet2
+pour voir la configuration du reseau netnet2
