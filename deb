@@ -1,4 +1,0 @@
-CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS                                PORTS                               NAMES
-99c01d466f6c   nginx:latest   "/docker-entrypoint.…"   12 seconds ago   Up 11 seconds                         80/tcp                              c2
-1481857a4ed7   nginx:latest   "/docker-entrypoint.…"   4 minutes ago    Exited (0) 18 seconds ago                                                 c1
-944af07acf3f   adminerv1      "bash"                   3 hours ago      Exited (255) Less than a second ago   0.0.0.0:80->80/tcp, :::80->80/tcp   cAdminer

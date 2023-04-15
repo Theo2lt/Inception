@@ -1,0 +1,72 @@
+version: '3'
+services:
+  ngnix:
+    container_name: ngnix
+    build: requirements/nginx/
+    ports:
+      - "80:80"
+    restart: always
+    networks:
+      - mynetwork
+    volumes:
+      - WordPress:/var/www/html
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+  
+  wordpress:
+    container_name: wordpress
+    build: requirements/wordpress/
+    restart: always
+    ports:
+      - "9000:9000"
+    networks:
+      - mynetwork
+    volumes:
+      - WordPress:/var/www/html
+    env_file: .env
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+
+  mariadb:
+    container_name: mariadb
+    build: requirements/mariadb/
+    restart: always
+    networks:
+      - mynetwork
+    volumes:
+      - db:/var/lib/mysql
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+
+  # BONUS 
+  adminer:
+    container_name: adminer
+    build: requirements/adminer/
+    ports:
+      - "8080:80"
+    restart: always
+    networks:
+      - mynetwork
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+
+# NETWORK
+networks:
+  mynetwork:
+    name : mynetwork
+    driver : bridge
+
+# VOLUME
+volumes:
+  db:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/tliot/data/db
+  WordPress:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/tliot/data/wordpress

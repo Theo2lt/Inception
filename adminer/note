@@ -1,2 +1,0 @@
-docker run  -tid -p 80:80  --name cAdminer adminerv1
-docker run  -tid -p 80:80 --name --network netnet2 cAdminer adminerv1

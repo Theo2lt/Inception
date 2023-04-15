@@ -1,7 +1,0 @@
-services:
-  minecraft-serv:
-    image: debian:lastest
-    volumes:
-      - type: bind
-        source: /minecraft-server/
-        target: /minecraft-server/
