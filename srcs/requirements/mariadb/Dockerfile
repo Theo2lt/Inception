@@ -1,9 +1,8 @@
 # SPECIFIE LA DISTRIBUTION
-FROM debian:latest
+FROM debian:10
 
 # MISE A JOUR ET INSTALLATION
-RUN apt update
-RUN apt install -y mariadb-server
+RUN apt update && apt install -y mariadb-server
 
 
 RUN apt install iputils-ping -y
@@ -13,12 +12,10 @@ EXPOSE 3306
 
 # COPY LA CONF POUR LE BIND ET LE SCRIPT SQL POUR LES DROITS DE PRIVILEGES
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
-COPY ./conf/script.sql /home/script.sql
 
+COPY ./conf/script.sh /
 # DEMARE MARIADB ET APPLIQUE LES DROITS DE PRIVILEGES
 
-RUN service mariadb start && mariadb  < /home/script.sql && rm -f /home/script.sql;
-
-
-ENTRYPOINT ["mysqld"]
-
+RUN chmod +x /script.sh
+#ENTRYPOINT [ "/home/script.sh", ]
+CMD [ "/script.sh" ]

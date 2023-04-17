@@ -1,5 +1,5 @@
 # SPECIFIE LA DISTRIBUTION
-FROM debian:latest
+FROM debian:10
 
 # UDPATE & INSTALLATION
 RUN apt-get update

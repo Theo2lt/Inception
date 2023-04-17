@@ -1,0 +1,5 @@
+CONTAINER ID   IMAGE            COMMAND                  CREATED          STATUS                  PORTS                                       NAMES
+6324ca98b3d5   srcs_mariadb     "mysqld /home/script…"   4 seconds ago    Up Less than a second   3306/tcp                                    mariadb
+c76345353c6c   srcs_wordpress   "/home/install.sh"       21 minutes ago   Up 21 minutes           0.0.0.0:9000->9000/tcp, :::9000->9000/tcp   wordpress
+5319998cdebf   srcs_adminer     "bash"                   21 minutes ago   Up 21 minutes           0.0.0.0:8080->80/tcp, :::8080->80/tcp       adminer
+dc85a3d295c5   srcs_ngnix       "nginx -g 'daemon of…"   21 minutes ago   Up 21 minutes           0.0.0.0:80->80/tcp, :::80->80/tcp           ngnix

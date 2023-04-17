@@ -494,3 +494,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password';
 flush privileges;
 
 SHOW GRANTS;
+
+
+for wordpress
+wp-config.php

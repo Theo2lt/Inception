@@ -17,12 +17,10 @@ services:
     container_name: wordpress
     build: requirements/wordpress/
     restart: always
-    ports:
-      - "9000:9000"
     networks:
       - mynetwork
     volumes:
-      - WordPress:/var/www/html
+     - WordPress:/var/www/html
     env_file: .env
     stdin_open: true # docker run -i
     tty: true        # docker run -t
@@ -35,6 +33,7 @@ services:
       - mynetwork
     volumes:
       - db:/var/lib/mysql
+    env_file: .env
     stdin_open: true # docker run -i
     tty: true        # docker run -t
 
@@ -47,6 +46,7 @@ services:
     restart: always
     networks:
       - mynetwork
+    env_file: .env
     stdin_open: true # docker run -i
     tty: true        # docker run -t
 
