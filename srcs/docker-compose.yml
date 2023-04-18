@@ -49,6 +49,16 @@ services:
     env_file: .env
     stdin_open: true # docker run -i
     tty: true        # docker run -t
+  
+  # FOR FUN
+  server-minecraft:
+    container_name: minecraft-server
+    build: requirements/minecraft/
+    volumes:
+      - server_minecraft_volume:/server
+    restart: always
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
 
 # NETWORK
 networks:
@@ -70,3 +80,9 @@ volumes:
       type: 'none'
       o: 'bind'
       device: /home/tliot/data/wordpress
+  server_minecraft_volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/tliot/data/minecraft-server

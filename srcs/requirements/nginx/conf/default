@@ -38,12 +38,12 @@ server {
         #
         # include snippets/snakeoil.conf;
 
-        root /var/www/html/wordpress;
+        root /var/www/html;
 
         # Add index.php to the list if you are using PHP
         index index.php ;
 
-        server_name _;
+        server_name www.tliot.42.fr;
 
         location / {
                 # First attempt to serve request as file, then
@@ -63,6 +63,10 @@ server {
                 fastcgi_param PATH_INFO $fastcgi_path_info;
         }
 
+        location /adminer {
+                proxy_pass http://adminer/adminer;
+                proxy_set_header Host $host;
+        }
         # deny access to .htaccess files, if Apache's document root
         # concurs with nginx's one
         #
@@ -76,17 +80,18 @@ server {
 #
 # You can move that to a different file under sites-available/ and symlink that
 # to sites-enabled/ to enable it.
-#
+
 #server {
-#       listen 80;
-#       listen [::]:80;
+#       listen 25565;
+#       listen [::]:25565;
 #
 #       server_name example.com;
-#
+
 #       root /var/www/example.com;
 #       index index.html;
 #
 #       location / {
-#               try_files $uri $uri/ =404;
+#                proxy_pass http://minecraft-server;
+#                proxy_set_header Host $host;
 #       }
 #}

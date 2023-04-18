@@ -10,7 +10,7 @@ RUN apt install iputils-ping -y
 RUN apt install vim -y
 
 COPY ./conf/default /etc/nginx/sites-enabled/
-
+COPY ./conf/web1.tliot.42.fr.conf /etc/nginx/sites-available/
 # PORT EXPOSE 
 EXPOSE 80
 
