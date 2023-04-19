@@ -19,8 +19,8 @@
 # Default server configuration
 #
 server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
+        listen 80 ;
+        listen [::]:80 ;
 
         # SSL configuration
         #
@@ -43,7 +43,7 @@ server {
         # Add index.php to the list if you are using PHP
         index index.php ;
 
-        server_name www.tliot.42.fr;
+        server_name www.tliot.42.fr tliot.42.fr;
 
         location / {
                 # First attempt to serve request as file, then
@@ -74,24 +74,3 @@ server {
         #       deny all;
         #}
 }
-
-
-# Virtual Host configuration for example.com
-#
-# You can move that to a different file under sites-available/ and symlink that
-# to sites-enabled/ to enable it.
-
-#server {
-#       listen 25565;
-#       listen [::]:25565;
-#
-#       server_name example.com;
-
-#       root /var/www/example.com;
-#       index index.html;
-#
-#       location / {
-#                proxy_pass http://minecraft-server;
-#                proxy_set_header Host $host;
-#       }
-#}

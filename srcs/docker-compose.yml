@@ -5,6 +5,8 @@ services:
     build: requirements/nginx/
     ports:
       - "80:80"
+      - "443:443"
+      - "25565:25565"
     restart: always
     networks:
       - mynetwork
@@ -41,8 +43,6 @@ services:
   adminer:
     container_name: adminer
     build: requirements/adminer/
-    ports:
-      - "8080:80"
     restart: always
     networks:
       - mynetwork
@@ -54,6 +54,8 @@ services:
   server-minecraft:
     container_name: minecraft-server
     build: requirements/minecraft/
+    networks:
+      - mynetwork
     volumes:
       - server_minecraft_volume:/server
     restart: always
