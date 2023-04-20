@@ -10,6 +10,7 @@ RUN apt install iputils-ping -y
 RUN apt install vim -y
 
 COPY ./conf/default /etc/nginx/sites-enabled/
+
 COPY ./conf/minecraft.conf /etc/nginx/modules-available/
 RUN  ln -s /etc/nginx/modules-available/minecraft.conf /etc/nginx/modules-enabled/minecraft.conf
 # PORT EXPOSE 

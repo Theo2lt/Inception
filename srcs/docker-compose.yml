@@ -36,8 +36,6 @@ services:
     volumes:
       - db:/var/lib/mysql
     env_file: .env
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
 
   # BONUS 
   adminer:
@@ -47,8 +45,29 @@ services:
     networks:
       - mynetwork
     env_file: .env
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
+
+  
+  redis:
+    container_name: redis
+    build: requirements/redis/
+    restart: always
+    networks:
+      - mynetwork
+    env_file: .env
+
+  #ftp:
+  #  container_name: ftp
+  #  build: requirements/ftp/
+  #  restart: always
+  #  networks:
+  #    - mynetwork
+  #  ports:
+  #    - "21:21"
+  #    - "20:20"
+  #    - "21000-21999:21000-21999"
+  #  env_file: .env
+  #  stdin_open: true # docker run -i
+  #  tty: true        # docker run -t
   
   # FOR FUN
   server-minecraft:
@@ -59,8 +78,7 @@ services:
     volumes:
       - server_minecraft_volume:/server
     restart: always
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
+
 
 # NETWORK
 networks:
