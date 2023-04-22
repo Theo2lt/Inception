@@ -10,9 +10,11 @@ RUN apt-get install -y vsftpd
 RUN apt install iputils-ping -y
 RUN apt install vim -y
 
+COPY ./conf/vsftpd.conf /etc/
 
-# FOR WORDPRESS
 COPY ./tools/script.sh /home/
 RUN chmod +x /home/script.sh
+
+
 
 ENTRYPOINT ["/home/script.sh" ] 

@@ -3,22 +3,28 @@ services:
   ngnix:
     container_name: ngnix
     build: requirements/nginx/
+    restart: always
+    depends_on:
+      - wordpress
+      - server-minecraft
+      - adminer
     ports:
       - "80:80"
       - "443:443"
       - "25565:25565"
-    restart: always
     networks:
       - mynetwork
     volumes:
       - WordPress:/var/www/html
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-  
+
   wordpress:
     container_name: wordpress
     build: requirements/wordpress/
     restart: always
+    depends_on:
+      - mariadb
     networks:
       - mynetwork
     volumes:
@@ -26,7 +32,7 @@ services:
     env_file: .env
     stdin_open: true # docker run -i
     tty: true        # docker run -t
-
+  
   mariadb:
     container_name: mariadb
     build: requirements/mariadb/
@@ -36,8 +42,8 @@ services:
     volumes:
       - db:/var/lib/mysql
     env_file: .env
-
-  # BONUS 
+  
+  #BONUS 
   adminer:
     container_name: adminer
     build: requirements/adminer/
@@ -45,7 +51,7 @@ services:
     networks:
       - mynetwork
     env_file: .env
-
+  
   
   redis:
     container_name: redis
@@ -54,7 +60,7 @@ services:
     networks:
       - mynetwork
     env_file: .env
-
+  
   static-web:
     container_name: static-web
     build: requirements/static-web/
@@ -65,24 +71,27 @@ services:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
 
-  #ftp:
-  #  container_name: ftp
-  #  build: requirements/ftp/
-  #  restart: always
-  #  networks:
-  #    - mynetwork
-  #  ports:
-  #    - "21:21"
-  #    - "20:20"
-  #    - "21000-21999:21000-21999"
-  #  env_file: .env
-  #  stdin_open: true # docker run -i
-  #  tty: true        # docker run -t
-  
-  # FOR FUN
+  ftp:
+    container_name: ftp
+    build: requirements/ftp/
+    restart: always
+    volumes:
+      - WordPress:/var/www/html
+    networks:
+      - mynetwork
+    ports:
+      - "21:21"
+      - "20:20"
+      - "40000-40050:40000-40050"
+    env_file: .env
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+
+   #FOR FUN
   server-minecraft:
     container_name: minecraft-server
     build: requirements/minecraft/
+    restart: always
     networks:
       - mynetwork
     volumes:
