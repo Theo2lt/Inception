@@ -1,11 +1,14 @@
 #!/bin/sh
-FILE=wp-config.php
+FILE=wordpress
 cd /var/www/html
 
-if [ -f "$FILE" ]; then
-    echo "$FILE exists." > deb
+if [ -d "$FILE" ]; then
+    echo "$FILE exists."
 else
-    echo "$FILE not exists." > deb
+    echo "$FILE not exists." 
+    mkdir -p wordpress
+    cd wordpress
+    
     curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
     php wp-cli.phar --info
     chmod +x wp-cli.phar

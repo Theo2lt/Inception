@@ -55,6 +55,16 @@ services:
       - mynetwork
     env_file: .env
 
+  static-web:
+    container_name: static-web
+    build: requirements/static-web/
+    volumes:
+     - WordPress:/var/www/html
+    networks:
+      - mynetwork
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+
   #ftp:
   #  container_name: ftp
   #  build: requirements/ftp/
