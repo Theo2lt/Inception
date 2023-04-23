@@ -20,7 +20,6 @@ RUN openssl req \
             -out //etc/ssl/certs/nginx-selfsigned.crt \
             -subj '/C=FR/ST=Ile-de-France/L=Paris/O=42/OU=42Paris/CN=TLIOT/UID=TTT'
 
-
 RUN echo "ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;\nssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;" > /etc/nginx/snippets/self-signed.conf
 
 RUN openssl dhparam -out /etc/nginx/dhparam.pem 2048
@@ -33,7 +32,6 @@ COPY ./conf/subdomain.conf     /etc/nginx/sites-available/
 
 RUN  ln -s /etc/nginx/sites-available/adminer.conf /etc/nginx/sites-enabled/
 RUN  ln -s /etc/nginx/sites-available/subdomain.conf /etc/nginx/sites-enabled/
-
 
 COPY ./conf/minecraft.conf /etc/nginx/modules-available/
 RUN  ln -s /etc/nginx/modules-available/minecraft.conf /etc/nginx/modules-enabled/minecraft.conf
