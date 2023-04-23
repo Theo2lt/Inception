@@ -12,7 +12,8 @@ RUN apt install vim -y
 EXPOSE 80
 
 RUN echo 'ServerName adminer' >> /etc/apache2/apache2.conf
-
+COPY conf/000-default.conf /etc/apache2/sites-available/
 RUN service apache2 start && a2enconf adminer.conf 
+
 
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

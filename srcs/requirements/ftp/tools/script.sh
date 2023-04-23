@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 service vsftpd start
 
 useradd -m $FTP_USER

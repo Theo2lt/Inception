@@ -14,8 +14,7 @@ RUN apt install vim -y
 
 
 # FOR WORDPRESS
-COPY ./conf/install.sh /home/
-COPY ./conf/wp-config.php /home/
+COPY ./tools/install.sh /home/
 RUN chmod 777 /home/install.sh
 
 EXPOSE 9000

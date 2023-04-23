@@ -13,7 +13,7 @@ EXPOSE 3306
 # COPY LA CONF POUR LE BIND ET LE SCRIPT SQL POUR LES DROITS DE PRIVILEGES
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
-COPY ./conf/script.sh /
+COPY ./tools/script.sh /
 # DEMARE MARIADB ET APPLIQUE LES DROITS DE PRIVILEGES
 
 RUN chmod +x /script.sh
