@@ -1,14 +1,9 @@
 # SPECIFIE LA DISTRIBUTION
-FROM debian:10
+FROM debian:buster
 
 # MISE A JOUR ET INSTALLATION
-RUN apt update && apt install -y mariadb-server
-
-
-RUN apt install iputils-ping -y
-RUN apt install vim -y
-# EXPOSE LE PORT 
-EXPOSE 3306
+RUN apt-get update && apt-get upgrade -y 
+RUN apt install -y mariadb-server iputils-ping vim
 
 # COPY LA CONF POUR LE BIND ET LE SCRIPT SQL POUR LES DROITS DE PRIVILEGES
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/

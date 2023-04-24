@@ -18,10 +18,9 @@ else
     sleep 5
     wp config create --dbname=$BDD_NAME --dbuser=$BDD_USER --dbpass=$BDD_USER_PASSWORD --dbhost=$BDD_HOST --allow-root 
     sleep 5
-    wp core install --url=$DOMAINE_NAME --title=INCEPTION --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL --allow-root  >> deb
+    wp core install --url=tliot.42.fr --title=INCEPTION --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL --allow-root  
     wp user create $WP_USER $WP_USER_EMAIL --user_pass=$WP_USER_PASSWORD --role=$WP_USER_ROLE --porcelain --allow-root 
     wp theme install neve --activate --allow-root  
-    
     
     wp config set WP_REDIS_HOST redis --add --allow-root
     wp config set WP_REDIS_PORT 6379 --add --allow-root  
@@ -32,4 +31,4 @@ else
     echo "END" 
 fi
 
-/usr/sbin/php-fpm7.4 -F
+/usr/sbin/php-fpm7.3 -F

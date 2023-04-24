@@ -1,6 +1,6 @@
 FROM debian:buster
 
-RUN apt update
+RUN apt-get update && apt-get upgrade -y 
 
 RUN apt install -y vim iputils-ping
 

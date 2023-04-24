@@ -1,15 +1,12 @@
 # SPECIFIE LA DISTRIBUTION
-FROM debian:10
+FROM debian:buster
 
 # MISE A JOUR ET INSTALLATION
-RUN apt update
-RUN apt install -y adminer 
+RUN apt-get update && apt-get upgrade -y 
+RUN apt install -y iputils-ping vim adminer 
 
-RUN apt install iputils-ping -y
-RUN apt install vim -y
 
 # EXPOSE LE PORT 
-EXPOSE 80
 
 RUN echo 'ServerName adminer' >> /etc/apache2/apache2.conf
 COPY conf/000-default.conf /etc/apache2/sites-available/

@@ -1,11 +1,10 @@
 # SPECIFIE LA DISTRIBUTION
-FROM debian:10
+FROM debian:buster
 
-RUN apt-get update
+RUN apt-get update && apt-get upgrade -y 
 
 # FOR DEBUGIN
-RUN apt install iputils-ping -y
-RUN apt install vim -y
+RUN apt install -y iputils-ping vim 
 
 # UDPATE & INSTALLATION
 RUN apt-get install -y nginx openssl
@@ -35,7 +34,5 @@ RUN  ln -s /etc/nginx/sites-available/subdomain.conf /etc/nginx/sites-enabled/
 
 COPY ./conf/minecraft.conf /etc/nginx/modules-available/
 RUN  ln -s /etc/nginx/modules-available/minecraft.conf /etc/nginx/modules-enabled/minecraft.conf
-# PORT EXPOSE 
-EXPOSE 80
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

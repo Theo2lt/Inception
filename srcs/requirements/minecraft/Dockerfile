@@ -1,15 +1,12 @@
-FROM debian:11
+FROM debian:buster
 
-RUN apt update
-
-RUN apt install iputils-ping -y
-RUN apt install vim -y
-
-RUN apt install -y openjdk-17-jdk openjdk-17-jre -y
+RUN apt-get update && apt-get -y upgrade
+RUN apt install -y vim iputils-ping wget curl tar
+RUN apt install -y openjdk-11-jdk openjdk-11-jre 
 
 WORKDIR /server
-EXPOSE 25565
-COPY config/server.jar /usr/bin/
+
+COPY config/server.jar /usr/bin/server.jar
 COPY config/eula.txt .
 ENTRYPOINT ["java", "-Xms1024m", "-Xmx2560m","-jar","/usr/bin/server.jar","nogui;"]
 

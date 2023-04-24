@@ -1,14 +1,9 @@
 # SPECIFIE LA DISTRIBUTION
-FROM debian:11
-RUN apt-get update && apt-get upgrade
+FROM debian:buster
+RUN apt-get update && apt-get upgrade -y 
 
 # UDPATE & INSTALLATION
-RUN apt-get install -y vsftpd
-
-
-# FOR DEBUGIN
-RUN apt install iputils-ping -y
-RUN apt install vim -y
+RUN apt-get install -y iputils-ping vim vsftpd 
 
 COPY ./conf/vsftpd.conf /etc/
 

@@ -52,7 +52,6 @@ services:
       - mynetwork
     env_file: .env
   
-  
   redis:
     container_name: redis
     build: requirements/redis/
@@ -87,7 +86,7 @@ services:
     stdin_open: true # docker run -i
     tty: true        # docker run -t
 
-   #FOR FUN
+  #FOR FUN
   server-minecraft:
     container_name: minecraft-server
     build: requirements/minecraft/
@@ -113,12 +112,14 @@ volumes:
       type: 'none'
       o: 'bind'
       device: /home/tliot/data/db
+
   WordPress:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
       device: /home/tliot/data/wordpress
+
   server_minecraft_volume:
     driver: local
     driver_opts:
