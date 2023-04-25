@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
   ngnix:
     container_name: ngnix
