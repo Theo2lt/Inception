@@ -73,9 +73,13 @@ We can now see that the name specified in ```--hostname``` is applied
 
 
 #### Basic command for managed volumes :
+
 * ```docker volume ls``` : list volumes 
+
 * ```docker volume create <name>``` : creating a new volume
+
 * ```docker volume rm <name>``` : delete a volume
+
 * ```docker volume inspect <name>``` : inspection of a volume
 
 #### The different types of volumes :
@@ -180,4 +184,83 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 _=/usr/bin/env
 ```
 
+## DOCKER NETWORK
 
+- Communication between containers or outside
+- Different types : bridge, host, none, overlay
+- Be careful, a container does not have a fixed IP address (stop / start)
+
+
+#### Basic command for managed network :
+
+* ```docker network ls``` : List networks
+
+* ```docker network create <name>``` : Create a network
+
+* ```docker network rm <name>``` : Remove one or more networks
+
+* ```docker network inspect <name>``` : Display detailed information on one or more networks
+
+
+#### IPs are not static
+
+In general, IPs in a network are not static.
+
+The addressing of the Ips depends on the starting order of the containers.
+
+#### Exemple
+
+Create bridge network with name, mynetwork :
+``` bash
+$ docker network create --driver=bridge mynetwork
+```
+Start two container connect to network "mynetwork"
+``` bash
+$ docker run -d --name c1 --network mynetwork nginx:latest
+$ docker run -d --name c2 --network mynetwork nginx:latest
+```
+Container 1 will have as ip address : 172.26.0.2 
+```
+$ docker inspect c1 --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+172.26.0.2 
+```
+Container 2 will have as ip address : 172.26.0.3
+```
+$ docker inspect c2 --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+172.26.0.3
+```
+We will now reverse the boot order
+```
+sudo docker stop c1
+sudo docker stop c2
+### reverse containers start order ###
+sudo docker start c2
+sudo docker start c1
+```
+We can see that the ip addresses are no longer the same
+```
+docker inspect c1 --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+172.26.0.3
+```
+
+```
+docker inspect c2 --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+172.26.0.2
+```
+### If the ips change, how do the containers communicate ?
+
+The containers will have to communicate with their name which redirects to the ip.
+
+```
+sudo docker exec -ti c1 bash 
+root@54bb6caca8fb:/# apt update && apt install iputils-ping -y
+### ping install ###
+root@54bb6caca8fb:/# ping c2
+PING c2 (172.26.0.2) 56(84) bytes of data.
+64 bytes from c2.mynetwork (172.26.0.2): icmp_seq=1 ttl=64 time=0.099 ms
+64 bytes from c2.mynetwork (172.26.0.2): icmp_seq=2 ttl=64 time=0.204 ms
+```
+
+It will therefore be necessary to use the name of the containers,
+in our different configurations, applications, programs to communicate.
+Container names are used as domain names.
