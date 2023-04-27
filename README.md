@@ -6,10 +6,13 @@ Use of dockerfile for the creation and management of custom images, micro servic
 
 Use of docker-compose for the deployment of containers, the creation and management of the network, storage space, etc ...
 
+## Structure of the project with the bonuses
+
+<img src="./.img_readme/DGR3.png">
 
 ## DOCKER
 
-### BASIC DOCKER COMMANDS
+## BASIC DOCKER COMMANDS
 
 * ```docker ps -a``` : List active containers (-a is for showing all containers, running and stopped)
 * ```docker stop  <id>/<name>``` : Stop running containers
@@ -20,7 +23,7 @@ Use of docker-compose for the deployment of containers, the creation and managem
 
 Tips to delete all containers, use: ```docker rm -f $(docker ps -qa)```
 
-### DOCKER RUN
+## DOCKER RUN
 
 ``` bash
 $ docker run [OPTIONS] IMAGE[:TAG]
@@ -60,7 +63,7 @@ root@nginx-container:/#
 We can now see that the name specified in ```--hostname``` is applied
 
 
-### DOCKER VOLUMES 
+## DOCKER VOLUMES 
 
 #### The advantages of volumes : 
 * Easy to persist data.
@@ -80,7 +83,7 @@ We can now see that the name specified in ```--hostname``` is applied
 * Volumes Docker : ```volumes are completely managed by Docker```
 * TMPFS : ```As opposed to volumes and bind mounts, a tmpfs mount is temporary, and only persisted in the host memory. When the container stops, the tmpfs mount is removed, and files written there won’t be persisted.```
 
-### DOCKER RUN WITH VOLUMES
+## DOCKER RUN WITH VOLUMES
 
 #### 1. Bind Mount  :
 
@@ -105,6 +108,13 @@ We can now see that the name specified in ```--hostname``` is applied
 ```docker exec -ti TestTmpfs bash```
 
 #### To check data persistence you can delete all containers and recreate them !! (do not recreate the volumes)
+
+``` bash
+CONTAINER ID   IMAGE          COMMAND                  CREATED              STATUS              PORTS                               NAMES
+f0096643b045   nginx:latest   "/docker-entrypoint.…"   About a minute ago   Up About a minute   0.0.0.0:82->80/tcp, :::82->80/tcp   TestTmpfs
+92260c1f5880   nginx:latest   "/docker-entrypoint.…"   About a minute ago   Up About a minute   0.0.0.0:81->80/tcp, :::81->80/tcp   TestVolume
+dcad272f7531   nginx:latest   "/docker-entrypoint.…"   About a minute ago   Up About a minute   0.0.0.0:80->80/tcp, :::80->80/tcp   TestBindMount
+```
 
 In each container modify/create the /usr/share/nginx/html/index.html, Remove containers and recreate.
 Now check if the changes have been saved.
