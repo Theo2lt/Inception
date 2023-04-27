@@ -10,7 +10,7 @@ Use of docker-compose for the deployment of containers, the creation and managem
 
 <img src="./.img_readme/DGR3.png">
 
-## DOCKER
+# DOCKER
 
 ## BASIC DOCKER COMMANDS
 
@@ -125,4 +125,61 @@ You can admire the changes from your websites.
 * TestBindMount : http://localhost:80
 * TestVolume : http://localhost:81
 * TestTmpfs : http://localhost:82
+
+## ENVIRONEMENT VARIABLE (ENV, ENVFILE...)
+
+``` sh
+docker run -tid --name testenv --env MYVAR="123" debian:latest
+```
+Add to the docker environment the variable MYVAR=123
+``` sh 
+docker exec -ti testenv bash
+```
+Look in the container for the environment variables with the "env" command.
+```
+root@cb9e44034297:/# env
+HOSTNAME=cb9e44034297
+MYVAR=123
+PWD=/
+HOME=/root
+TERM=xterm
+SHLVL=1
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+_=/usr/bin/env
+```
+
+This method works but is not secure for example for passwords.
+To do this we will be able to add an env file ".ENV"
+
+To do this, we will create a ".ENV" file in which we will put our environment variables. 
+"```vim  .ENV```" 
+
+```
+MYPASSWORD="safepassword"
+MYUSER="secretuser"
+MYDB="BDD1"
+```
+```
+docker run -tid --name testenv --env-file .ENV debian:latest
+```
+```
+docker exec -ti testenv bash
+```
+Look in the container for the environment variables with the "env" command.
+
+
+```
+root@553c2ac8a657:/# env
+HOSTNAME=553c2ac8a657
+PWD=/
+HOME=/root
+MYPASSWORD="safepassword"
+TERM=xterm
+SHLVL=1
+MYUSER="secretuser"
+MYDB="BDD1"
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+_=/usr/bin/env
+```
+
 
