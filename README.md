@@ -161,8 +161,6 @@ MYDB="BDD1"
 ```
 ```
 docker run -tid --name testenv --env-file .ENV debian:latest
-```
-```
 docker exec -ti testenv bash
 ```
 Look in the container for the environment variables with the "env" command.
