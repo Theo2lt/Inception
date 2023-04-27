@@ -52,12 +52,12 @@ We can see that the container is running in daemon mode.
 That the exposure of the ports is well done and that the name of the container is the one that we specified in parameter
 
 ``` bash
-docker exec -it web-ngnix bash
+$ docker exec -it web-ngnix bash
 ```
 The docker exec command runs a new command in a running container.
 
 ``` bash
-root@nginx-container:/# 
+$ root@nginx-container:/# 
 ```
 
 We can now see that the name specified in ```--hostname``` is applied
@@ -128,12 +128,12 @@ You can admire the changes from your websites.
 
 ## ENVIRONEMENT VARIABLE (ENV, ENVFILE...)
 
-``` sh
-docker run -tid --name testenv --env MYVAR="123" debian:latest
+``` bash
+$ docker run -tid --name testenv --env MYVAR="123" debian:latest
 ```
 Add to the docker environment the variable MYVAR=123
-``` sh 
-docker exec -ti testenv bash
+``` bash
+$ docker exec -ti testenv bash
 ```
 Look in the container for the environment variables with the "env" command.
 ```
@@ -160,8 +160,8 @@ MYUSER="secretuser"
 MYDB="BDD1"
 ```
 ```
-docker run -tid --name testenv --env-file .ENV debian:latest
-docker exec -ti testenv bash
+$ docker run -tid --name testenv --env-file .ENV debian:latest
+$ docker exec -ti testenv bash
 ```
 Look in the container for the environment variables with the "env" command.
 
