@@ -18,7 +18,7 @@ Use of docker-compose for the deployment of containers, the creation and managem
 * ```docker stop  <id>/<name>``` : Stop running containers
 * ```docker start <id>/<name>``` : Start stopped containers
 * ```docker rm -f <id>/<name>``` : Remove containers (-f is for force the removal of a running container)
-* ```docker exec -it <name> bash :``` Execute a command in a running container
+* ```docker exec -it <name> bash``` : Execute a command in a running container
 
 
 Tips to delete all containers, use: ```docker rm -f $(docker ps -qa)```
@@ -264,3 +264,43 @@ PING c2 (172.26.0.2) 56(84) bytes of data.
 It will therefore be necessary to use the name of the containers,
 in our different configurations, applications, programs to communicate.
 Container names are used as domain names.
+
+## DOCKERFILE
+
+Dockerfile is a configuration file for the purpose of creating an image
+
+#### Dockerfile benefit
+* Restart an image creation at any time
+* Better configuration visibility
+* Dockerfile editing script
+* Image creation, production or development
+
+
+### Instructions Dockerfile
+
+| □|   Instructions       |  Description |
+| :-| :------------------- | :-------------|
+| 1 | FROM                 | New build stage and sets the Base Image for subsequent instructions.|
+| 2 | MAINTAINER           | author         |
+| 3 | ARG                  | Defines a variable that users can pass when building the image             |
+| 4 | ENV	               | Environment variable   |
+| 4 | LABEL                | Adding metadata              |
+| 5 | VOLUME               | Create a mount point              |
+| 6 | RUN	               | Execute a command when creating the image            |
+| 6 | COPY // ADD          | Add a file and directory in the image               |
+| 6 | WORKDIR              | Allows you to change the current path             |
+| 7 | EXPOSE               | Port listened by the container (metadata)        |
+| 9 | CMD // ENTRYPOINT    | Execute a command when the container starts     |
+
+
+## DOCKER-COMPOSE
+
+#### What is Docker Compose?
+Docker Compose is a tool that was developed to help define and share multi-container applications. With Compose, we can create a YAML file to define the services and with a single command, can spin everything up or tear it all down.
+### BASIC DOCKER COMMANDS
+
+* ```docker-compose build``` : To build the images
+* ```docker-compose up -d``` : To run containers in daemon mode
+* ```docker-compose up --build -d``` : To build images and run containers in daemon mode {my favorite :-)}
+* ```docker-compose start/stop``` : To start and stop services
+* ```docker-compose down``` : To stop and delete containers
