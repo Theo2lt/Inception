@@ -5,7 +5,6 @@ FROM debian:buster
 RUN apt-get update && apt-get upgrade -y 
 RUN apt install -y iputils-ping vim adminer 
 
-
 # EXPOSE LE PORT 
 
 RUN echo 'ServerName adminer' >> /etc/apache2/apache2.conf
