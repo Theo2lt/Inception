@@ -310,6 +310,7 @@ Docker Compose is a tool that was developed to help define and share multi-conta
 # Starter Pack [ MariaDB - Adminer ]
 
 ```yml
+# file : docker-compose.yml
 version: '3.5'
 services:
   adminer:
