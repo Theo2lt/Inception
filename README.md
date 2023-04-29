@@ -480,8 +480,6 @@ Server version: 10.3.38-MariaDB-0+deb10u1 Debian 10
 Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-
 ```
 Check if our user and root is enabled for any host
 ``` sql
