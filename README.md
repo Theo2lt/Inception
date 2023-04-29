@@ -294,7 +294,7 @@ Dockerfile is a configuration file for the purpose of creating an image
 
 
 
-### BUILD A IMAGE
+## BUILD A IMAGE
 
 Here are the different files we need to build the image
 
