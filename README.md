@@ -293,6 +293,222 @@ Dockerfile is a configuration file for the purpose of creating an image
 | 9 | CMD // ENTRYPOINT    | Execute a command when the container starts     |
 
 
+
+### BUILD A IMAGE
+
+Here are the different files we need to build the image
+
+```bash
+$ tree
+.
+├── 50-server.cnf  # Mariadb configuration file
+├── Dockerfile     # The dockerfile to build the image
+└── script.sh      # Database configuration script
+```
+
+
+```Dockerfile```
+``` .Dockerfile
+# SPECIFIES DISTRIBUTION
+FROM debian:buster
+
+# UPDATE AND INSTALLATION
+RUN apt-get update
+RUN apt install -y mariadb-server 
+
+# COPY THE CONF FOR THE BIND AND THE SQL SCRIPT FOR THE PRIVILEGE
+COPY 50-server.cnf /etc/mysql/mariadb.conf.d/
+
+# COPY THE SCRIPT IN THE IMAGES AND MODIFY THE EXECUTION RIGHTS OF IT
+COPY script.sh /
+RUN chmod +x /script.sh
+
+ENTRYPOINT [ "/script.sh" ]
+```
+By default, the server does not accept external connections, or rather, it only accepts local connections (from the LoopBack address: localhost = 127.0.0.1).
+We need change that !
+
+```50-server.cnf```
+``` .cnf
+# FILE = 
+[server]
+
+[mysqld]
+
+user                    = mysql
+pid-file                = /run/mysqld/mysqld.pid
+socket                  = /run/mysqld/mysqld.sock
+port                    = 3306
+basedir                 = /usr
+datadir                 = /var/lib/mysql
+tmpdir                  = /tmp
+lc-messages-dir         = /usr/share/mysql
+lc-messages             = en_US
+skip-external-locking
+
+# bind-address          = 127.0.0.1  # You need to change this line to allow external connections
+bind-address            = 0.0.0.0    # Now it's better :-)
+
+expire_logs_days        = 10
+character-set-server  = utf8mb4
+collation-server      = utf8mb4_general_ci
+
+[embedded]
+
+[mariadb]
+
+[mariadb-10.5]
+```
+
+
+Script.sh will be executed at entrypoint at runtime.
+this allow us to initialize the environment variables with an ```.env```file
+
+```script.sh```
+
+``` .sh
+#!/bin/sh
+service mysql start 
+
+# CREATE USER #
+echo "CREATE USER '$BDD_USER'@'%' IDENTIFIED BY '$BDD_USER_PASSWORD';" | mysql
+
+# PRIVILGES FOR ROOT AND USER FOR ALL IP ADRESS #
+echo "GRANT ALL PRIVILEGES ON *.* TO '$BDD_USER'@'%' IDENTIFIED BY '$BDD_USER_PASSWORD';" | mysql
+echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$BDD_ROOT_PASSWORD';" | mysql
+echo "FLUSH PRIVILEGES;" | mysql
+
+# CREAT WORDPRESS DATABASE #
+echo "CREATE DATABASE $BDD_NAME;" | mysql
+
+kill $(cat /var/run/mysqld/mysqld.pid)
+
+mysqld
+```
+#### DOCKER BUILD : 
+```
+$ docker build -t my-mariadb .  
+......
+......
+Successfully built 6ad0c955aa67
+Successfully tagged my-mariadb:latest 👍
+```
+
+For this example, we'll change to ``\home`` and run `my-mariadb` image with an environment file.
+
+
+``` bash 
+$ cd /home
+```
+
+Create .env file in which `username`, `user`, `password`, `database name`, `root password`.
+
+This information will be embedded in the container at runtime.
+```
+$ vim .env
+BDD_USER=user
+BDD_USER_PASSWORD=safepwd
+BDD_NAME=wordpress
+BDD_ROOT_PASSWORD=safepwdroot
+```
+To run the image you will need a specific env file and image name
+```
+$ docker run -tid --name testmariadb --env-file .env my-mariadb
+```
+The container is well executed, we can check with a `docker ps`
+```
+$ docker ps
+CONTAINER ID   IMAGE        COMMAND        CREATED          STATUS          PORTS     NAMES
+34e058b2f18f   my-mariadb   "/script.sh"   22 seconds ago   Up 22 seconds             testmariadb
+```
+Enter the container to check if our variables have integrated
+```
+$ docker exec -ti testmariadb bash                            
+root@34e058b2f18f:/# 
+```
+Everything is good 🤩
+```
+root@34e058b2f18f:/# env
+HOSTNAME=34e058b2f18f
+PWD=/
+BDD_NAME=wordpress
+HOME=/root
+BDD_USER_PASSWORD=safepwd
+TERM=xterm
+SHLVL=1
+BDD_ROOT_PASSWORD=safepwdroot
+BDD_USER=user
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+_=/usr/bin/env
+```
+Check if the conf file has been copied
+```
+root@34e058b2f18f:/# cat /etc/mysql/mariadb.conf.d/50-server.cnf 
+
+[server]
+
+[mysqld]
+
+user                    = mysql
+pid-file                = /run/mysqld/mysqld.pid
+socket                  = /run/mysqld/mysqld.sock
+port                    = 3306
+basedir                 = /usr
+datadir                 = /var/lib/mysql
+tmpdir                  = /tmp
+lc-messages-dir         = /usr/share/mysql
+lc-messages             = en_US
+skip-external-locking
+
+bind-address            = 0.0.0.0
+
+expire_logs_days        = 10
+character-set-server  = utf8mb4
+collation-server      = utf8mb4_general_ci
+
+[embedded]
+
+[mariadb]
+```
+Let's start mysql to check users and database
+```
+root@34e058b2f18f:/# mysql 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 8
+Server version: 10.3.38-MariaDB-0+deb10u1 Debian 10
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+
+```
+Check if our user and root is enabled for any host
+``` sql
+MariaDB [(none)]> SELECT user,host,password FROM mysql.user;
++------+-----------+-------------------------------------------+
+| user | host      | password                                  |
++------+-----------+-------------------------------------------+
+| root | localhost |                                           |
+| user | %         | *1C848575FF465642717BE88F2015E168769A62F3 |
+| root | %         | *FDB22E6F75BD75009DEE947AFD0BD73CB7EB88DA |
++------+-----------+-------------------------------------------+
+3 rows in set (0.005 sec)
+```
+Check if the "wordpress" database has been created
+``` sql
+MariaDB [(none)]> SHOW databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| wordpress          |
++--------------------+
+4 rows in set (0.005 sec)
+```
+
 ## DOCKER-COMPOSE
 
 #### What is Docker Compose?
