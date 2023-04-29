@@ -442,7 +442,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 _=/usr/bin/env
 ```
 Check if the conf file has been copied
-```
+``` .cnf
 root@34e058b2f18f:/# cat /etc/mysql/mariadb.conf.d/50-server.cnf 
 
 [server]
