@@ -385,7 +385,7 @@ kill $(cat /var/run/mysqld/mysqld.pid)
 
 mysqld
 ```
-### DOCKER BUILD : 
+## DOCKER BUILD : 
 ```
 $ docker build -t my-mariadb .  
 ......
