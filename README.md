@@ -295,6 +295,7 @@ Dockerfile is a configuration file for the purpose of creating an image
 
 
 ## BUILD A IMAGE
+#### We will now create a mariadb image
 
 Here are the different files we need to build the image
 
@@ -507,10 +508,20 @@ MariaDB [(none)]> SHOW databases;
 4 rows in set (0.005 sec)
 ```
 
-# DOCKER-COMPOSE
+
+
+
+# Starter Pack [ MariaDB - Adminer ]
+In the previous part we saw how to write a dockerfile and build the image using `docker build`
+
+In this part we will see how to use `docker compose` and write a `docker-compose.yml`
+
+## DOCKER-COMPOSE
 
 #### What is Docker Compose?
-Docker Compose is a tool that was developed to help define and share multi-container applications. With Compose, we can create a YAML file to define the services and with a single command, can spin everything up or tear it all down.
+Docker Compose is a tool that was developed to help define and share multi-container applications. 
+
+With Compose, we can create a YAML file to define the services and with a single command, can spin everything up or tear it all down.
 ### BASIC DOCKER COMMANDS
 
 * ```docker-compose build``` : To build the images
@@ -521,6 +532,5 @@ Docker Compose is a tool that was developed to help define and share multi-conta
 
 
 
-# Starter Pack [ MariaDB - Adminer ]
-
+### COMMIMG SOON
 writing in progress ..... come back later ;-)
