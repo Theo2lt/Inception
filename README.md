@@ -628,3 +628,7 @@ volumes:
       o: 'bind'
       device: ./my_volume # Persistent volume
 ```
+
+<img src="./.img_readme/login_Adminer_1.png">
+
+<img src="./.img_readme/login_Adminer_2.png">
