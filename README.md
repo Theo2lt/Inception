@@ -515,6 +515,48 @@ In the previous part we saw how to write a dockerfile and build the image using 
 
 In this part we will see how to use `docker compose` and write a `docker-compose.yml`
 
+But first, we will see the configuration and the creation of the dockerfile for Adminer.
+
+Adminer is a tool for managing content in databases. It natively supports MySQL, MariaDB, PostgreSQL, SQLite,
+
+Once installed, we will be able to connect to our database from the Web Adminer interface 😎
+
+```Dockerfile``` (Adminer)
+
+``` .Dockerfile
+# SPECIFIES DISTRIBUTION
+FROM debian:buster
+
+# UPDATE AND INSTALLATION
+RUN apt-get update 
+RUN apt install -y adminer 
+
+# COPY THE CONF FILE 
+COPY 000-default.conf /etc/apache2/sites-available/
+RUN echo 'ServerName adminer' >> /etc/apache2/apache2.conf
+
+# START AND CONF 
+RUN service apache2 start && a2enconf adminer.conf 
+
+ENTRYPOINT ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+```
+
+```000-default.conf``` (Adminer)
+``` .conf
+<VirtualHost *:80>
+        DocumentRoot /etc/adminer
+        Alias /adminer /etc/adminer
+        
+        <Directory /etc/adminer>
+                Require all granted
+                DirectoryIndex conf.php
+        </Directory> 
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+
 ## DOCKER-COMPOSE
 
 #### What is Docker Compose?
@@ -530,6 +572,59 @@ With Compose, we can create a YAML file to define the services and with a single
 * ```docker-compose down``` : To stop and delete containers
 
 
+It is important that the project structure is consistent with the dockerfiles and docker-compose.yml
 
-### COMMIMG SOON
-writing in progress ..... come back later ;-)
+``` bash
+$ tree 
+.
+├── adminer_directory
+│   ├── 000-default.conf 
+│   └── Dockerfile
+├── docker-compose.yml
+├── .env               # Env file
+├── mariadb_directory
+│   ├── 50-server.cnf  # Same file seen above
+│   ├── Dockerfile     # Same file seen above
+│   └── script.sh      # Same file seen above
+└── my_volume.         # Persistent volume
+```
+
+```docker-compose.yml```
+
+``` .yml
+version: '3.5'
+services:
+  adminer:
+    container_name: Adminer     # Name redirect to IP -> 172.X.X.Z
+    build: adminer_directory/.  # Build the dockerfile in ./adminer_directory/Dockerfile 
+    restart: always             # Restart the container if it has stopped
+    ports:
+      - "80:80"                 # Redirect port 80 of Adminer on the host
+    networks:
+      - mynetwork               # Use mynetwork for communicate with mariadb
+  
+  mariadb:
+    container_name: Mariadb
+    build: mariadb_directory/.
+    restart: always
+    networks:
+      - mynetwork
+    volumes:
+      - db:/var/lib/mysql
+    env_file: .env
+
+# NETWORK
+networks:
+  mynetwork:
+    name : mynetwork
+    driver : bridge # Remember the different types of Networks, I showed you before ????
+
+# VOLUME
+volumes:
+  db:
+    driver: local
+    driver_opts:          # Options specific to the driver
+      type: 'none'
+      o: 'bind'
+      device: ./my_volume # Persistent volume
+```

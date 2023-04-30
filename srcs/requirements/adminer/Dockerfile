@@ -1,15 +1,15 @@
-# SPECIFIE LA DISTRIBUTION
+# SPECIFIES DISTRIBUTION
 FROM debian:buster
 
-# MISE A JOUR ET INSTALLATION
-RUN apt-get update && apt-get upgrade -y 
-RUN apt install -y iputils-ping vim adminer 
+# UPDATE AND INSTALLATION
+RUN apt-get update 
+RUN apt install -y adminer 
 
-# EXPOSE LE PORT 
-
+# COPY THE CONF FILE 
+COPY 000-default.conf /etc/apache2/sites-available/
 RUN echo 'ServerName adminer' >> /etc/apache2/apache2.conf
-COPY conf/000-default.conf /etc/apache2/sites-available/
+
+# START AND CONF 
 RUN service apache2 start && a2enconf adminer.conf 
 
-
-CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+ENTRYPOINT ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
