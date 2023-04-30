@@ -1,16 +1,15 @@
-# SPECIFIE LA DISTRIBUTION
+# SPECIFIES DISTRIBUTION
 FROM debian:buster
 
-# MISE A JOUR ET INSTALLATION
-RUN apt-get update && apt-get upgrade -y 
-RUN apt install -y mariadb-server iputils-ping vim
+# UPDATE AND INSTALLATION
+RUN apt-get update
+RUN apt install -y mariadb-server 
 
-# COPY LA CONF POUR LE BIND ET LE SCRIPT SQL POUR LES DROITS DE PRIVILEGES
+# COPY THE CONF FOR THE BIND AND THE SQL SCRIPT FOR THE PRIVILEGE
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
+# COPY THE SCRIPT IN THE IMAGES AND MODIFY THE EXECUTION RIGHTS OF IT
 COPY ./tools/script.sh /
-# DEMARE MARIADB ET APPLIQUE LES DROITS DE PRIVILEGES
+RUN  chmod +x /script.sh
 
-RUN chmod +x /script.sh
-#ENTRYPOINT [ "/home/script.sh", ]
-CMD [ "/script.sh" ]
+ENTRYPOINT [ "/script.sh" ]

@@ -331,7 +331,6 @@ We need change that !
 
 ```50-server.cnf```
 ``` .cnf
-# FILE = 
 [server]
 
 [mysqld]
