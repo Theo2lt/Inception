@@ -581,7 +581,7 @@ $ tree
 │   ├── 000-default.conf 
 │   └── Dockerfile
 ├── docker-compose.yml
-├── .env               # Env file
+├── .env               # same .env as before 
 ├── mariadb_directory
 │   ├── 50-server.cnf  # Same file seen above
 │   ├── Dockerfile     # Same file seen above
@@ -617,18 +617,62 @@ services:
 networks:
   mynetwork:
     name : mynetwork
-    driver : bridge # Remember the different types of Networks, I showed you before ????
+    driver : bridge         # Remember the different types of Networks, I showed you before ???
 
 # VOLUME
 volumes:
   db:
     driver: local
-    driver_opts:          # Options specific to the driver
+    driver_opts:            # Options specific to the driver
       type: 'none'
       o: 'bind'
-      device: ./my_volume # Persistent volume
+      device: ./my_volume   # Persistent volume
+```
+The docker-compose.yml is edited.
+
+The various essential elements of the infrastructure being positioned in the right place.
+
+We will be able to launch our infrastructure using the command : `docker-compose up --build -d` .
+
+This will build and then launch the images.
+``` .sh
+$ docker-compose up --build -d
+....
+....
+Creating Mariadb ... done
+Creating Adminer ... done
 ```
 
+``` .sh
+$ docker ps 
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                               NAMES
+5b1e14853a6e   mdb-adm_adminer   "/usr/sbin/apache2ct…"   1 minutes ago   Up 1 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp   Adminer
+4cb7c3cb88f8   mdb-adm_mariadb   "/script.sh"             1 minutes ago   Up 1 minutes                                       Mariadb
+```
+
+The launch of our containers went well.
+
+We will be able to connect to our database through the Adminer web interface using the host address.
+
+For my part, the address of my host is `192.168.64.13`, because i work remotely on a vm.
+
+Most likely your host address is `localhost` or `127.0.0.1`.
+
+"Adminer" will ask us for the connection information.
+
+This information corresponds to the information present in the ".env" file
+
+The server address to enter is `Mariadb`
+
+```
+USERNAME = user
+PASSWORD = safepwd
+DATABASE = wordpress
+``` 
+
 <img src="./.img_readme/login_Adminer1.png">
+
+great the connection works 👍🏼
+
 
 <img src="./.img_readme/login_Adminer2.png">
