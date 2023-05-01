@@ -658,7 +658,7 @@ For my part, the address of my host is `192.168.64.13`, because i work remotely 
 
 Most likely your host address is `localhost` or `127.0.0.1`.
 
-"Adminer" will ask us for the connection information.
+Adminer will ask us for the connection information.
 
 This information corresponds to the information present in the ".env" file
 
