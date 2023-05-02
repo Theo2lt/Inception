@@ -677,3 +677,6 @@ Great the connection works 👍🏼
 <img src="./.img_readme/login_Adminer2.png">
 
 You can also log in as root. You just have to put in "root" in user and the password present in the env file.
+
+
+# [ PHP-FPM - NGNIX ]
