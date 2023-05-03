@@ -511,6 +511,9 @@ MariaDB [(none)]> SHOW databases;
 
 
 # Starter Pack [ MariaDB - Adminer ]
+
+<img src="./.img_readme/adminer-sql.png">
+
 In the previous part we saw how to write a dockerfile and build the image using `docker build`
 
 In this part we will see how to use `docker compose` and write a `docker-compose.yml`
