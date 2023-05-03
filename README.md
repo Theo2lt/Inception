@@ -512,7 +512,7 @@ MariaDB [(none)]> SHOW databases;
 
 # Starter Pack [ MariaDB - Adminer ]
 
-<img src="./.img_readme/adminer-sql.png">
+<img src="./.img_readme/adminer_sql.png">
 
 In the previous part we saw how to write a dockerfile and build the image using `docker build`
 
