@@ -24,10 +24,10 @@ RUN echo "ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;\nssl_certificate_
 RUN openssl dhparam -out /etc/nginx/dhparam.pem 2048
 COPY ./conf/ssl-params.conf /etc/nginx/snippets/
 
-COPY ./conf/default.conf /etc/nginx/conf.d/default.conf
 
-COPY ./conf/adminer.conf     /etc/nginx/sites-available/
-COPY ./conf/subdomain.conf     /etc/nginx/sites-available/
+COPY ./conf/default    /etc/nginx/sites-available/
+COPY ./conf/adminer.conf    /etc/nginx/sites-available/
+COPY ./conf/subdomain.conf  /etc/nginx/sites-available/
 
 RUN  ln -s /etc/nginx/sites-available/adminer.conf /etc/nginx/sites-enabled/
 RUN  ln -s /etc/nginx/sites-available/subdomain.conf /etc/nginx/sites-enabled/

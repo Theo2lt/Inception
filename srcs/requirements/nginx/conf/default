@@ -1,15 +1,15 @@
 
 server {
-    listen 80;
-    listen [::]:80;
+    listen 80 default_server;
+    listen [::]:80 default_server;
     server_name tliot.42.fr;
     return 301 https://tliot.42.fr$request_uri;
 }
 
 
 server {
-        listen 443 ssl;
-        listen [::]:443 ssl;
+        listen 443 ssl default_server;
+        listen [::]:443 ssl default_server;
         
         ssl_protocols	TLSv1.3;
 
