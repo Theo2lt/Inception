@@ -8,7 +8,7 @@ Use of docker-compose for the deployment of containers, the creation and managem
 
 ## Structure of the project with the bonuses
 
-<img src="./.img_readme/DGR3.png">
+<img src="./.img_readme/DGRB.png">
 
 # DOCKER
 
@@ -683,6 +683,8 @@ You can also log in as root. You just have to put in "root" in user and the pass
 
 
 # WORDPRESS (FPM EDITION) WITH NGNIX 
+
+<img src="./.img_readme/nginx_php_fpm.png">
 
 #### Currently eating pasta or sleeping.... 😴🍝
 #### Come back later to find out more ... :)
