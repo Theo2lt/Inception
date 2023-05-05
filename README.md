@@ -682,7 +682,7 @@ Great the connection works 👍🏼
 You can also log in as root. You just have to put in "root" in user and the password present in the env file.
 
 
-# WORDPRESS (FPM EDITION) WITH NGNIX 
+# PHP-FPM && NGNIX 
 
 <img src="./.img_readme/nginx_php_fpm.png">
 
