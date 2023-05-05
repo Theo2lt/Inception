@@ -9,8 +9,8 @@ Use of docker-compose for the deployment of containers, the creation and managem
 ## Table of contents
 
 - #### [DOCKER](#docker)
-- #### [STARTER PACK MariaDB - ADMINER ](#starter-pack--mariadb---adminer-)
-- #### [PHP-FPM & NGNIX](#php-fpm--ngnix)
+- #### [STARTER PACK MARIADB - ADMINER ](#starter-pack--mariadb---adminer-)
+- #### [PHP-FPM & NGNIX](#php-fpm--ngnix-1)
 
 
 ## Structure of the project with the bonuses
