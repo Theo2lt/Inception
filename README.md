@@ -682,9 +682,165 @@ Great the connection works 👍🏼
 You can also log in as root. You just have to put in "root" in user and the password present in the env file.
 
 
-# PHP-FPM && NGNIX 
+# PHP-FPM & NGNIX 
 
 <img src="./.img_readme/nginx_php_fpm.png">
 
-#### Currently eating pasta or sleeping.... 😴🍝
-#### Come back later to find out more ... :)
+``` bash 
+$ tree
+.
+├── docker-compose.yml
+├── nginx
+│   ├── conf
+│   │   └── default
+│   └── Dockerfile
+└── wordpress
+    ├── conf
+    │   ├── index.php
+    │   └── www.conf
+    └── Dockerfile
+```
+
+``` docker-compose.yml```
+
+``` .yml
+version: '3.5'
+services:
+  ngnix:
+    container_name: ngnix
+    build: ./nginx/
+    restart: always
+    volumes:
+     - WordPress:/var/www/html
+    depends_on:
+      - wordpress
+    ports:
+      - "80:80"
+    networks:
+      - mynetwork
+
+  wordpress:
+    container_name: wordpress
+    build: ./wordpress/
+    restart: always
+    volumes:
+     - WordPress:/var/www/html
+    networks:
+     - mynetwork
+  
+# NETWORK
+networks:
+  mynetwork:
+    name : mynetwork
+    driver : bridge
+
+# VOLUME
+volumes:
+  WordPress:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: /home/tliot/data/website
+```
+
+## Installing NGINX
+
+```Dockerfile```
+
+``` .Dockerfile
+# SPECIFIE LA DISTRIBUTION
+FROM debian:buster
+RUN apt-get update
+
+# NGINX INSTALLATION
+RUN apt-get install -y nginx
+
+# Copy of default web page configuration
+COPY ./conf/default    /etc/nginx/sites-available/default
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+```
+
+```default```
+
+```
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        server_name _;
+
+        root /var/www/html/wordpress;
+        index index.php ;
+        
+        # logging
+        access_log /var/log/nginx/wordpress.access.log;
+        error_log /var/log/nginx/wordpress.error.log;
+        
+        location / {
+                try_files $uri $uri/ =404;
+        }
+
+        location ~ \.php$ {
+                try_files $uri = 404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_pass wordpress:9000; # <- redirect to wordpress container
+                fastcgi_index index.php;
+                include fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                fastcgi_param PATH_INFO $fastcgi_path_info;
+        }
+}
+```
+
+## Installing PHP-FPM
+
+
+```dockerfile```
+
+``` .Dockerfile
+# SPECIFIE LA DISTRIBUTION
+FROM debian:buster
+RUN apt-get update
+
+# UDPATE & INSTALLATION
+RUN apt install php-fpm  -y
+
+# To create the PID file (/run/php/php7.3-fpm.pid)
+RUN mkdir /run/php
+
+# To allow external connections
+COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
+
+# To create index.php  
+COPY ./conf/index.php    /var/www/html/wordpress/index.php
+
+# Is optional, just a metadata
+EXPOSE 9000 
+
+ENTRYPOINT ["/usr/sbin/php-fpm7.3","-F" ]
+```
+
+```index.php```
+```
+<? php echo phpinfo(); ?>
+
+```
+
+``` www.conf ```
+
+``` .conf
+[www]
+user = www-data
+group = www-data
+# listen = 127.0.0.1:9000 # Change this line
+listen = 9000             # Now it's better
+listen.owner = www-data
+listen.group = www-data
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3
+```
