@@ -686,6 +686,11 @@ You can also log in as root. You just have to put in "root" in user and the pass
 
 <img src="./.img_readme/nginx_php_fpm.png">
 
+
+In this part we will create a simple infrastructure allowing to separate nginx and php.
+
+We will then use this same infrastructure to implement the SSL certificate and communicate only on port 443 to connect to our web server.
+
 ``` bash 
 $ tree
 .
@@ -700,6 +705,13 @@ $ tree
     │   └── www.conf
     └── Dockerfile
 ```
+
+
+To work, nginx and php need to have access to the same file.
+
+This is why our "wordress" volume is common to both containers.
+
+Both will share the folder ```/var/www/html```
 
 ``` docker-compose.yml```
 
@@ -785,7 +797,7 @@ server {
         location ~ \.php$ {
                 try_files $uri = 404;
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                fastcgi_pass wordpress:9000; # <- redirect to wordpress container
+                fastcgi_pass wordpress:9000; # <------------ Redirect to wordpress container
                 fastcgi_index index.php;
                 include fastcgi_params;
                 fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
@@ -843,3 +855,7 @@ pm.start_servers = 2
 pm.min_spare_servers = 1
 pm.max_spare_servers = 3
 ```
+
+## Connecting NGINX
+
+<img src="./.img_readme/web-nginx-php.png">
