@@ -11,8 +11,7 @@ Use of docker-compose for the deployment of containers, the creation and managem
 - #### [DOCKER](#docker-1)
 - #### [STARTER PACK MARIADB - ADMINER ](#starter-pack--mariadb---adminer-)
 - #### [PHP-FPM & NGNIX](#php-fpm--ngnix-1)
-
-- #### [SETUP A SELF-SIGNED SSL CERTIFICATE](#setup-a-self-signed-ssl-certificate)
+- #### [SETUP A SELF-SIGNED SSL CERTIFICATE](#setup-a-self-signed-ssl-certificate-1)
 
 
 
