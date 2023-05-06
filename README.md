@@ -871,11 +871,7 @@ pm.max_spare_servers = 3
 <img src="./.img_readme/web-nginx-php.png">
 
 
-
-
-
 # Setup a self-signed SSL certificate
-
 
 #### Create the self-signed SSL certificate:
 
@@ -981,3 +977,23 @@ server {
     networks:
       - mynetwork
 ```
+
+
+
+### Testing the SSL Server
+
+Next, test whether the SSL encryption is working.
+
+On your browser, type the prefix ```http://``` then your domain name:
+
+```https://server_domain```
+
+Since the certificate is not already signed by a trusted certificate authority, you will most likely get a warning like the one below:
+
+You will see a warning that may pop-up because the SSL certificate created earlier isn’t signed by a trusted certificate authority:
+
+<img src="./.img_readme/ssl1.png">
+
+It's goood 👍🏼
+
+<img src="./.img_readme/ssl2.png">
