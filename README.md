@@ -11,9 +11,10 @@ Use of docker-compose for the deployment of containers, the creation and managem
 - #### [DOCKER](#docker-1)
 - #### [STARTER PACK MARIADB - ADMINER ](#starter-pack--mariadb---adminer-)
 - #### [PHP-FPM & NGNIX](#php-fpm--ngnix-1)
+- #### [LOCAL DOMAINS IN LINUX](#php-fpm--ngnix-1)
 - #### [SETUP A SELF-SIGNED SSL CERTIFICATE](#setup-a-self-signed-ssl-certificate-1)
 
-
+# Local Domains in Linux
 
 ## Structure of the project with the bonuses
 
@@ -869,6 +870,42 @@ pm.max_spare_servers = 3
 
 <img src="./.img_readme/web-nginx-php.png">
 
+# Local Domains in Linux
+
+#### Configure DNS Locally Using /etc/hosts File in Linux
+
+
+Now open the /etc/hosts file using your editor of choice as follows
+
+```sudo vi /etc/hosts```
+
+Then add the lines below to the end of the file as shown in the screen shot below.
+
+```
+127.0.0.1	    localhost
+255.255.255.255	broadcasthost
+::1             localhost
+
+192.168.64.13	tliot.42.fr          # <--- Principal Domains
+192.168.64.13	adminer.tliot.42.fr  # <--- adminer subdomain (optional)
+192.168.64.13	*.tliot.42.fr        # <--- all subdomain (optional)
+
+```
+
+Next, test if everything is working well as expected, using the ping command. 
+
+```
+$ ping tliot.42.fr
+PING tliot.42.fr (192.168.64.13): 56 data bytes
+64 bytes from 192.168.64.13: icmp_seq=0 ttl=64 time=1.919 ms
+64 bytes from 192.168.64.13: icmp_seq=1 ttl=64 time=2.046 ms
+64 bytes from 192.168.64.13: icmp_seq=2 ttl=64 time=2.391 ms
+64 bytes from 192.168.64.13: icmp_seq=3 ttl=64 time=2.017 ms
+64 bytes from 192.168.64.13: icmp_seq=4 ttl=64 time=2.481 ms
+^C
+--- tliot.42.fr ping statistics ---
+5 packets transmitted, 5 packets received, 0.0% packet loss
+```
 
 # Setup a self-signed SSL certificate
 
