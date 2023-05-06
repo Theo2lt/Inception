@@ -866,3 +866,115 @@ pm.max_spare_servers = 3
 ## Connecting NGINX
 
 <img src="./.img_readme/web-nginx-php.png">
+
+
+
+
+
+# Setup a self-signed SSL certificate
+
+
+#### Create the self-signed SSL certificate:
+
+```
+RUN openssl req \
+            -x509 \
+            -nodes \
+            -days 365 \
+            -newkey rsa:2048 \
+            -keyout /etc/ssl/private/nginx-selfsigned.key \
+            -out /etc/ssl/certs/nginx-selfsigned.crt \
+            -subj '/C=FR/ST=Ile-de-France/L=Paris/O=42/OU=42Paris/CN=TLIOT/UID=TTT'
+```
+
+#### Create a new configuration snippet file for Nginx:
+
+```
+RUN echo "ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;\nssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;" > /etc/nginx/snippets/self-signed.conf
+```
+
+#### Create a strong Diffie-Hellman group:
+
+```
+RUN openssl dhparam -out /etc/nginx/dhparam.pem 2048
+```
+#### Create a configuration snippet with strong encryption settings:
+```
+COPY ./conf/ssl-params.conf /etc/nginx/snippets/
+```
+
+```ssl-params.conf```
+
+```
+ssl_prefer_server_ciphers on;
+ssl_dhparam /etc/nginx/dhparam.pem; 
+ssl_ciphers EECDH+AESGCM:EDH+AESGCM;
+ssl_ecdh_curve secp384r1;
+ssl_session_timeout  10m;
+ssl_session_cache shared:SSL:10m;
+ssl_session_tickets off;
+ssl_stapling on;
+ssl_stapling_verify on;
+resolver 8.8.8.8 8.8.4.4 valid=300s;
+resolver_timeout 5s;
+add_header X-Frame-Options DENY;
+add_header X-Content-Type-Options nosniff;
+add_header X-XSS-Protection "1; mode=block";
+```
+
+
+#### Configure Nginx site to use certificate:
+
+```
+server {
+        listen 443 ssl default_server;      <--- 80 to 443
+        listen [::]:443 ssl default_server; <--- 80 to 443
+
+        server_name tliot.42.fr;            <--- _ to tliot.42.fr
+
+        # ssl 
+        include snippets/self-signed.conf;  <--- self-signed SSL
+        include snippets/ssl-params.conf;   <--- strong encryption
+
+        root /var/www/html/wordpress;
+        index index.php ;
+        
+        # logging
+        access_log /var/log/nginx/wordpress.access.log;
+        error_log /var/log/nginx/wordpress.error.log;
+        
+        location / {
+                try_files $uri $uri/ =404;
+        }
+
+        location ~ \.php$ {
+                try_files $uri = 404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_pass wordpress:9000;
+                fastcgi_index index.php;
+                include fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                fastcgi_param PATH_INFO $fastcgi_path_info;
+        }
+}
+```
+
+
+#### Configure docker-compose.yml site to use 443:
+
+```docker-compose.yml```
+
+```
+  ngnix:
+    container_name: ngnix
+    build: ./nginx/
+    restart: always
+    volumes:
+     - WordPress:/var/www/html
+    depends_on:
+      - wordpress
+    ports:
+      - "443:443"   <--- 80:80 to 443:443
+    networks:
+      - mynetwork
+```
